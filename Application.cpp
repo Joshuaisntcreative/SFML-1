@@ -31,6 +31,9 @@ void repositionRectangles(std::vector<sf::RectangleShape>& rectangles, int windo
     }
 }
 
+void colorful(std::vector<sf::RectangleShape> &rectangles){
+
+}
 int main() {
     sf::RenderWindow window(sf::VideoMode(windowLength, windowWidth), "SFML works!");
     window.setFramerateLimit(60);
