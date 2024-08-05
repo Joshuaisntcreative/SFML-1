@@ -30,15 +30,19 @@ void repositionRectangles(std::vector<sf::RectangleShape>& rectangles, int windo
         currxPos += 10;
     }
 }
-
-void colorful(std::vector<sf::RectangleShape> &rectangles){
-
+void colorful(std::vector<sf::RectangleShape>& rectangles) {
+    for (auto& rectangle : rectangles) {
+        rectangle.setFillColor(sf::Color::Green);
+    }
 }
+
 int main() {
+
     sf::RenderWindow window(sf::VideoMode(windowLength, windowWidth), "SFML works!");
     window.setFramerateLimit(60);
     int currxPos = 0;
     sf::Font font;
+    sf::Time delay = sf::seconds(2.0f);
     if (!font.loadFromFile(".\\Dependencies\\ROCK.TTF")) {
         std::cerr << "Error loading font" << std::endl;
         return -1;
@@ -63,7 +67,6 @@ int main() {
         rectangles.push_back(rectangle);
     }
 
-    bool sorted = false;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -74,10 +77,10 @@ int main() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
                 window.close();
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !sorted) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
                 bubbleSort(rectangles);
                 repositionRectangles(rectangles, windowWidth);
-                sorted = true; // Ensure sorting is done only once
+                colorful(rectangles);
                 text.setString("Sort complete");
             }
         }
