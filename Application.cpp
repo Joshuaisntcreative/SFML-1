@@ -35,6 +35,24 @@ void repositionRectangles(std::vector<sf::RectangleShape>& rectangles, int windo
 }
 
 
+void clockwork(sf::Clock &clock, sf::Text &text) {
+    sf::Time t = clock.getElapsedTime();
+    float f = t.asSeconds();
+    std::string s = std::to_string(f);
+    text.setString("Timer: " + s);
+}
+
+//method is only changing the color of the first rectangle
+void coloredRectangles(sf::Clock& clock, std::vector<sf::RectangleShape>& rectangles, sf::Time delay) {
+    for (auto& rectangle : rectangles) {
+        if (clock.getElapsedTime() >= delay) {
+            rectangle.setFillColor(sf::Color::Green);
+            clock.restart();
+        }
+    }
+}
+
+
 int main() {
 
     sf::RenderWindow window(sf::VideoMode(windowLength, windowWidth), "SFML works!");
@@ -89,22 +107,22 @@ int main() {
             }
         }
 
-            sf::Time t = clock.getElapsedTime();
-            float f = t.asSeconds();
-            std::string s = std::to_string(f);
-            time.setString(s);
+        coloredRectangles(clock, rectangles, delay);
+        clockwork(clock, time);
 
-            window.clear();
 
-            for (const auto& rectangle : rectangles) {
-                window.draw(rectangle);
-            }
 
-            window.draw(text);
-            window.draw(time);
-            window.display();
+        window.clear();
+
+        for (const auto& rectangle : rectangles) {
+              window.draw(rectangle);
         }
+
+        window.draw(text);
+        window.draw(time);
+        window.display();
+    }
         return 0;
         
-    }
+ }
     
