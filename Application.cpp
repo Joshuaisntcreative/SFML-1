@@ -5,9 +5,12 @@
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
+#include <string>
 
 int windowLength = 1280;
 int windowWidth = 720;
+
+
 
 void bubbleSort(std::vector<sf::RectangleShape>& rectangles) {
     for (size_t i = 0; i < rectangles.size(); i++) {
@@ -30,11 +33,7 @@ void repositionRectangles(std::vector<sf::RectangleShape>& rectangles, int windo
         currxPos += 10;
     }
 }
-void colorful(std::vector<sf::RectangleShape>& rectangles) {
-    for (auto& rectangle : rectangles) {
-        rectangle.setFillColor(sf::Color::Green);
-    }
-}
+
 
 int main() {
 
@@ -48,8 +47,14 @@ int main() {
         return -1;
     }
 
+    sf::Clock clock;
+
+
     sf::Text text("Press 'S' to sort", font, 20);
     text.setPosition(10, 10);
+    sf::Text time("Timer:", font, 20);
+    time.setPosition(10, 30);
+
 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
@@ -80,20 +85,26 @@ int main() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
                 bubbleSort(rectangles);
                 repositionRectangles(rectangles, windowWidth);
-                colorful(rectangles);
                 text.setString("Sort complete");
             }
         }
 
-        window.clear();
+            sf::Time t = clock.getElapsedTime();
+            float f = t.asSeconds();
+            std::string s = std::to_string(f);
+            time.setString(s);
 
-        for (const auto& rectangle : rectangles) {
-            window.draw(rectangle);
+            window.clear();
+
+            for (const auto& rectangle : rectangles) {
+                window.draw(rectangle);
+            }
+
+            window.draw(text);
+            window.draw(time);
+            window.display();
         }
-
-        window.draw(text);
-        window.display();
+        return 0;
+        
     }
-
-    return 0;
-}
+    
