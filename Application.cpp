@@ -43,12 +43,11 @@ void clockwork(sf::Clock &clock, sf::Text &text) {
 }
 
 //method is only changing the color of the first rectangle
-void coloredRectangles(sf::Clock& clock, std::vector<sf::RectangleShape>& rectangles, sf::Time delay) {
-    for (auto& rectangle : rectangles) {
-        if (clock.getElapsedTime() >= delay) {
-            rectangle.setFillColor(sf::Color::Green);
-            clock.restart();
-        }
+void coloredRectangles(sf::Clock& clock, std::vector<sf::RectangleShape>& rectangles, sf::Time delay, size_t& currentIndex) {
+    if (clock.getElapsedTime() >= delay && currentIndex < rectangles.size()) {
+        rectangles[currentIndex].setFillColor(sf::Color::Green);
+        clock.restart();
+        currentIndex++;
     }
 }
 
@@ -77,6 +76,7 @@ int main() {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     std::vector<sf::RectangleShape> rectangles;
+    size_t currentIndex = 0;
 
 
     for (int i = 0; i < 128; i++) {
@@ -107,7 +107,7 @@ int main() {
             }
         }
 
-        coloredRectangles(clock, rectangles, delay);
+        coloredRectangles(clock, rectangles, delay, currentIndex);
         clockwork(clock, time);
 
 
