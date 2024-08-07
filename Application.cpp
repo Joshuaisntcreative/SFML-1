@@ -5,9 +5,12 @@
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
+#include <string>
 
 int windowLength = 1280;
 int windowWidth = 720;
+
+
 
 void bubbleSort(std::vector<sf::RectangleShape>& rectangles) {
     for (size_t i = 0; i < rectangles.size(); i++) {
@@ -31,22 +34,49 @@ void repositionRectangles(std::vector<sf::RectangleShape>& rectangles, int windo
     }
 }
 
+
+void clockwork(sf::Clock &clock, sf::Text &text) {
+    sf::Time t = clock.getElapsedTime();
+    float f = t.asSeconds();
+    std::string s = std::to_string(f);
+    text.setString("Timer: " + s);
+}
+
+//method is only changing the color of the first rectangle
+void coloredRectangles(sf::Clock& clock, std::vector<sf::RectangleShape>& rectangles, sf::Time delay, size_t& currentIndex) {
+    if (clock.getElapsedTime() >= delay && currentIndex < rectangles.size()) {
+        rectangles[currentIndex].setFillColor(sf::Color::Green);
+        clock.restart();
+        currentIndex++;
+    }
+}
+
+
 int main() {
+
     sf::RenderWindow window(sf::VideoMode(windowLength, windowWidth), "SFML works!");
     window.setFramerateLimit(60);
     int currxPos = 0;
     sf::Font font;
+    sf::Time delay = sf::seconds(2.0f);
     if (!font.loadFromFile(".\\Dependencies\\ROCK.TTF")) {
         std::cerr << "Error loading font" << std::endl;
         return -1;
     }
 
+    sf::Clock clock;
+
+
     sf::Text text("Press 'S' to sort", font, 20);
     text.setPosition(10, 10);
+    sf::Text time("Timer:", font, 20);
+    time.setPosition(10, 30);
+
 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     std::vector<sf::RectangleShape> rectangles;
+    size_t currentIndex = 0;
 
 
     for (int i = 0; i < 128; i++) {
@@ -60,7 +90,6 @@ int main() {
         rectangles.push_back(rectangle);
     }
 
-    bool sorted = false;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -71,23 +100,29 @@ int main() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
                 window.close();
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !sorted) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
                 bubbleSort(rectangles);
                 repositionRectangles(rectangles, windowWidth);
-                sorted = true; // Ensure sorting is done only once
                 text.setString("Sort complete");
             }
         }
 
+        coloredRectangles(clock, rectangles, delay, currentIndex);
+        clockwork(clock, time);
+
+
+
         window.clear();
 
         for (const auto& rectangle : rectangles) {
-            window.draw(rectangle);
+              window.draw(rectangle);
         }
 
         window.draw(text);
+        window.draw(time);
         window.display();
     }
-
-    return 0;
-}
+        return 0;
+        
+ }
+    
