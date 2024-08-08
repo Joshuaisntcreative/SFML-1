@@ -101,14 +101,14 @@ int main() {
     size_t currentIndex = 0;
 
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 128; i++) {
         float height = rand() % 520 + 70;
-        sf::RectangleShape rectangle(sf::Vector2f(39, height));
+        sf::RectangleShape rectangle(sf::Vector2f(9, height));
         rectangle.setPosition(currxPos, windowWidth - height);
         rectangle.setOutlineColor(sf::Color::Black);
         rectangle.setOutlineThickness(1.0f);
 
-        currxPos += 40;
+        currxPos += 10;
         rectangles.push_back(rectangle);
     }
 
