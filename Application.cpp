@@ -51,6 +51,27 @@ void coloredRectangles(sf::Clock& clock, std::vector<sf::RectangleShape>& rectan
     }
 }
 
+//combining bubbleSort with repositionrectangles and colored rectangles
+void finalizedBubbleSort(std::vector<sf::RectangleShape> & rectangles) {
+    for (size_t i = 0; i < rectangles.size(); i++) {
+        for (size_t j = 0; j < rectangles.size() - 1; j++) {
+            sf::Vector2f temp0;
+            sf::Vector2f temp1;
+            const float height0 = rectangles[j].getSize().y;
+            const float height1 = rectangles[j + 1].getSize().y;
+
+            if (height0 > height1) {
+                std::swap(rectangles[j], rectangles[j + 1]);
+                temp0 = rectangles[j].getPosition();
+                temp1 = rectangles[j + 1].getPosition();
+                rectangles[j + 1].setPosition(temp0.x, temp1.y);
+                rectangles[j].setPosition(temp1.x, temp0.y);
+
+            }
+        }
+    }
+}
+
 
 int main() {
 
@@ -76,17 +97,18 @@ int main() {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     std::vector<sf::RectangleShape> rectangles;
+    //This is the iterator of the rectangles array to color them
     size_t currentIndex = 0;
 
 
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < 4; i++) {
         float height = rand() % 520 + 70;
-        sf::RectangleShape rectangle(sf::Vector2f(9, height));
+        sf::RectangleShape rectangle(sf::Vector2f(39, height));
         rectangle.setPosition(currxPos, windowWidth - height);
         rectangle.setOutlineColor(sf::Color::Black);
         rectangle.setOutlineThickness(1.0f);
 
-        currxPos += 10;
+        currxPos += 40;
         rectangles.push_back(rectangle);
     }
 
@@ -101,13 +123,10 @@ int main() {
                 window.close();
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                bubbleSort(rectangles);
-                repositionRectangles(rectangles, windowWidth);
+                finalizedBubbleSort(rectangles);
                 text.setString("Sort complete");
             }
         }
-
-        coloredRectangles(clock, rectangles, delay, currentIndex);
         clockwork(clock, time);
 
 
