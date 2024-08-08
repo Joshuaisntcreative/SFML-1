@@ -42,14 +42,18 @@ void clockwork(sf::Clock &clock, sf::Text &text) {
     text.setString("Timer: " + s);
 }
 
-//method is only changing the color of the first rectangle
+//delay the iteration of each rectangle,when s is pressed, 2 rectangles at a time should be colored
 void coloredRectangles(sf::Clock& clock, std::vector<sf::RectangleShape>& rectangles, sf::Time delay, size_t& currentIndex) {
-    if (clock.getElapsedTime() >= delay && currentIndex < rectangles.size()) {
-        rectangles[currentIndex].setFillColor(sf::Color::Green);
+    if (clock.getElapsedTime() >= delay && currentIndex + 1 < rectangles.size()) {
+        rectangles[currentIndex].setFillColor(sf::Color::Red);
+        rectangles[currentIndex + 1].setFillColor(sf::Color::Red);
         clock.restart();
-        currentIndex++;
+        currentIndex+= 2;
     }
 }
+
+
+
 
 //combining bubbleSort with repositionrectangles and colored rectangles
 void finalizedBubbleSort(std::vector<sf::RectangleShape> & rectangles) {
@@ -73,13 +77,14 @@ void finalizedBubbleSort(std::vector<sf::RectangleShape> & rectangles) {
 }
 
 
+
 int main() {
 
     sf::RenderWindow window(sf::VideoMode(windowLength, windowWidth), "SFML works!");
     window.setFramerateLimit(60);
     int currxPos = 0;
     sf::Font font;
-    sf::Time delay = sf::seconds(2.0f);
+    sf::Time delay = sf::milliseconds(4.0f);
     if (!font.loadFromFile(".\\Dependencies\\ROCK.TTF")) {
         std::cerr << "Error loading font" << std::endl;
         return -1;
@@ -123,12 +128,13 @@ int main() {
                 window.close();
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                finalizedBubbleSort(rectangles);
+                //finalizedBubbleSort(rectangles);
+                
                 text.setString("Sort complete");
             }
         }
         clockwork(clock, time);
-
+        coloredRectangles(clock, rectangles, delay, currentIndex);
 
 
         window.clear();
