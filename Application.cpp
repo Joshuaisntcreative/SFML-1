@@ -56,21 +56,28 @@ void coloredRectangles(sf::Clock& clock, std::vector<sf::RectangleShape>& rectan
 
 
 //combining bubbleSort with repositionrectangles and colored rectangles
-void finalizedBubbleSort(std::vector<sf::RectangleShape> & rectangles) {
-        for (size_t j = 0; j < rectangles.size() - 1; j++) {
+void finalizedBubbleSort(std::vector<sf::RectangleShape> &rectangles, size_t& currentIndex, sf::Clock& clock, sf::Time delay) {
+    if (currentIndex - 1 == rectangles.size()) {
+        return;
+    }
+        if(clock.getElapsedTime() >= delay){
+
             sf::Vector2f temp0;
             sf::Vector2f temp1;
-            const float height0 = rectangles[j].getSize().y;
-            const float height1 = rectangles[j + 1].getSize().y;
+            const float height0 = rectangles[currentIndex].getSize().y;
+            const float height1 = rectangles[currentIndex + 1].getSize().y;
 
             if (height0 > height1) {
-                std::swap(rectangles[j], rectangles[j + 1]);
-                temp0 = rectangles[j].getPosition();
-                temp1 = rectangles[j + 1].getPosition();
-                rectangles[j + 1].setPosition(temp0.x, temp1.y);
-                rectangles[j].setPosition(temp1.x, temp0.y);
+                std::swap(rectangles[currentIndex], rectangles[currentIndex + 1]);
+                temp0 = rectangles[currentIndex].getPosition();
+                temp1 = rectangles[currentIndex + 1].getPosition();
+                rectangles[currentIndex + 1].setPosition(temp0.x, temp1.y);
+                rectangles[currentIndex].setPosition(temp1.x, temp0.y);
 
             }
+
+            currentIndex++;
+            clock.restart();
         }
     }
 
@@ -82,7 +89,7 @@ int main() {
     window.setFramerateLimit(60);
     int currxPos = 0;
     sf::Font font;
-    sf::Time delay = sf::milliseconds(4.0f);
+    sf::Time delay = sf::seconds(2.0f);
     if (!font.loadFromFile(".\\Dependencies\\ROCK.TTF")) {
         std::cerr << "Error loading font" << std::endl;
         return -1;
@@ -126,13 +133,13 @@ int main() {
                 window.close();
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                finalizedBubbleSort(rectangles);
+                
                 
                 text.setString("Sort complete");
             }
         }
         clockwork(clock, time);
-        //coloredRectangles(clock, rectangles, delay, currentIndex);
+        finalizedBubbleSort(rectangles,currentIndex, clock, delay);
         
 
 
