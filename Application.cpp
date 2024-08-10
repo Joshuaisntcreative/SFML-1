@@ -55,7 +55,7 @@ void coloredRectangles(sf::Clock clock, std::vector<sf::RectangleShape>& rectang
 
 //combining bubbleSort with repositionrectangles and colored rectangles
 void finalizedBubbleSort(std::vector<sf::RectangleShape> &rectangles, size_t& currentIndex, sf::Clock& clock, sf::Time delay) {
-
+    
     sf::Time timeElapsed = clock.getElapsedTime();
 
     if (currentIndex + 1 == rectangles.size()) {
@@ -96,13 +96,14 @@ int main() {
     window.setFramerateLimit(60);
     int currxPos = 0;
     sf::Font font;
-    sf::Time delay = sf::seconds(2);
+    sf::Time delay = sf::milliseconds(4);
     if (!font.loadFromFile(".\\Dependencies\\ROCK.TTF")) {
         std::cerr << "Error loading font" << std::endl;
         return -1;
     }
 
-    sf::Clock clock;
+    sf::Clock timer;
+    sf::Clock sortClock;
 
 
     sf::Text text("Press 'S' to sort", font, 20);
@@ -145,8 +146,8 @@ int main() {
                 text.setString("Sort complete");
             }
         }
-        displayTime(clock, time);
-        finalizedBubbleSort(rectangles,currentIndex, clock, delay);
+        displayTime(timer, time);
+        finalizedBubbleSort(rectangles,currentIndex, sortClock, delay);
         
 
 
