@@ -57,7 +57,6 @@ void coloredRectangles(sf::Clock& clock, std::vector<sf::RectangleShape>& rectan
 
 //combining bubbleSort with repositionrectangles and colored rectangles
 void finalizedBubbleSort(std::vector<sf::RectangleShape> & rectangles) {
-    for (size_t i = 0; i < rectangles.size(); i++) {
         for (size_t j = 0; j < rectangles.size() - 1; j++) {
             sf::Vector2f temp0;
             sf::Vector2f temp1;
@@ -74,7 +73,6 @@ void finalizedBubbleSort(std::vector<sf::RectangleShape> & rectangles) {
             }
         }
     }
-}
 
 
 
@@ -128,13 +126,14 @@ int main() {
                 window.close();
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                //finalizedBubbleSort(rectangles);
+                finalizedBubbleSort(rectangles);
                 
                 text.setString("Sort complete");
             }
         }
         clockwork(clock, time);
-        coloredRectangles(clock, rectangles, delay, currentIndex);
+        //coloredRectangles(clock, rectangles, delay, currentIndex);
+        
 
 
         window.clear();
