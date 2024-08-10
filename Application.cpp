@@ -71,17 +71,16 @@ void finalizedBubbleSort(std::vector<sf::RectangleShape> &rectangles, size_t& cu
             const float height1 = rectangles[currentIndex + 1].getSize().y;
             rectangles[currentIndex].setFillColor(sf::Color::Red);
 
-
+            //when the next value is larger than the current rectangle
             if (height0 > height1) {
                 std::swap(rectangles[currentIndex], rectangles[currentIndex + 1]);
                 temp0 = rectangles[currentIndex].getPosition();
                 temp1 = rectangles[currentIndex + 1].getPosition();
                 rectangles[currentIndex + 1].setPosition(temp0.x, temp1.y);
                 rectangles[currentIndex].setPosition(temp1.x, temp0.y);
-                rectangles[currentIndex + 1].setFillColor(sf::Color::Red);
-                
+
             }
-            
+            rectangles[currentIndex + 1].setFillColor(sf::Color::Red);
             rectangles[currentIndex].setFillColor(sf::Color::White);
             currentIndex++;
             clock.restart();
@@ -96,13 +95,16 @@ int main() {
     window.setFramerateLimit(60);
     int currxPos = 0;
     sf::Font font;
-    sf::Time delay = sf::milliseconds(4);
+    sf::Time delay = sf::milliseconds(1);
     if (!font.loadFromFile(".\\Dependencies\\ROCK.TTF")) {
         std::cerr << "Error loading font" << std::endl;
         return -1;
     }
 
+    //used to keep track of how long the sorting algorithm takes in seconds
     sf::Clock timer;
+
+    //used to regulate the delay in the sort
     sf::Clock sortClock;
 
 
