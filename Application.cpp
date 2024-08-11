@@ -35,21 +35,58 @@ void repositionRectangles(std::vector<sf::RectangleShape>& rectangles, int windo
 }
 
 
-void clockwork(sf::Clock &clock, sf::Text &text) {
+void displayTime(sf::Clock &clock, sf::Text &text) {
     sf::Time t = clock.getElapsedTime();
     float f = t.asSeconds();
     std::string s = std::to_string(f);
     text.setString("Timer: " + s);
 }
 
-//method is only changing the color of the first rectangle
-void coloredRectangles(sf::Clock& clock, std::vector<sf::RectangleShape>& rectangles, sf::Time delay, size_t& currentIndex) {
-    if (clock.getElapsedTime() >= delay && currentIndex < rectangles.size()) {
-        rectangles[currentIndex].setFillColor(sf::Color::Green);
+//delay the iteration of each rectangle,when s is pressed, 2 rectangles at a time should be colored
+void coloredRectangles(sf::Clock clock, std::vector<sf::RectangleShape>& rectangles, sf::Time delay, size_t& currentIndex) {
+    if (clock.getElapsedTime() >= delay && currentIndex + 1 < rectangles.size()) {
+        rectangles[currentIndex].setFillColor(sf::Color::Red);
+        rectangles[currentIndex + 1].setFillColor(sf::Color::Red);
         clock.restart();
-        currentIndex++;
+        currentIndex+= 2;
     }
 }
+
+
+//combining bubbleSort with repositionrectangles and colored rectangles
+void finalizedBubbleSort(std::vector<sf::RectangleShape> &rectangles, size_t& currentIndex, sf::Clock& clock, sf::Time delay) {
+    
+    sf::Time timeElapsed = clock.getElapsedTime();
+
+    if (currentIndex + 1 == rectangles.size()) {
+        rectangles[currentIndex].setFillColor(sf::Color::White);
+        currentIndex = 0;
+        
+    }
+        if(timeElapsed >= delay){
+
+            sf::Vector2f temp0;
+            sf::Vector2f temp1;
+            const float height0 = rectangles[currentIndex].getSize().y;
+            const float height1 = rectangles[currentIndex + 1].getSize().y;
+            rectangles[currentIndex].setFillColor(sf::Color::Red);
+
+            //when the next value is larger than the current rectangle
+            if (height0 > height1) {
+                std::swap(rectangles[currentIndex], rectangles[currentIndex + 1]);
+                temp0 = rectangles[currentIndex].getPosition();
+                temp1 = rectangles[currentIndex + 1].getPosition();
+                rectangles[currentIndex + 1].setPosition(temp0.x, temp1.y);
+                rectangles[currentIndex].setPosition(temp1.x, temp0.y);
+
+            }
+            rectangles[currentIndex + 1].setFillColor(sf::Color::Red);
+            rectangles[currentIndex].setFillColor(sf::Color::White);
+            currentIndex++;
+            clock.restart();
+        }
+    }
+
 
 
 int main() {
@@ -58,13 +95,17 @@ int main() {
     window.setFramerateLimit(60);
     int currxPos = 0;
     sf::Font font;
-    sf::Time delay = sf::seconds(2.0f);
+    sf::Time delay = sf::milliseconds(2);
     if (!font.loadFromFile(".\\Dependencies\\ROCK.TTF")) {
         std::cerr << "Error loading font" << std::endl;
         return -1;
     }
 
-    sf::Clock clock;
+    //used to keep track of how long the sorting algorithm takes in seconds
+    sf::Clock timer;
+
+    //used to regulate the delay in the sort
+    sf::Clock sortClock;
 
 
     sf::Text text("Press 'S' to sort", font, 20);
@@ -76,6 +117,7 @@ int main() {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     std::vector<sf::RectangleShape> rectangles;
+    //This is the iterator of the rectangles array to color them
     size_t currentIndex = 0;
 
 
@@ -101,15 +143,15 @@ int main() {
                 window.close();
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                bubbleSort(rectangles);
-                repositionRectangles(rectangles, windowWidth);
+                
+                
                 text.setString("Sort complete");
             }
         }
-
-        coloredRectangles(clock, rectangles, delay, currentIndex);
-        clockwork(clock, time);
-
+        finalizedBubbleSort(rectangles, currentIndex, sortClock, delay);
+        displayTime(timer, time);
+        
+        
 
 
         window.clear();
