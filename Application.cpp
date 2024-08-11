@@ -95,7 +95,7 @@ int main() {
     window.setFramerateLimit(60);
     int currxPos = 0;
     sf::Font font;
-    sf::Time delay = sf::milliseconds(1);
+    sf::Time delay = sf::milliseconds(2);
     if (!font.loadFromFile(".\\Dependencies\\ROCK.TTF")) {
         std::cerr << "Error loading font" << std::endl;
         return -1;
@@ -148,8 +148,9 @@ int main() {
                 text.setString("Sort complete");
             }
         }
+        finalizedBubbleSort(rectangles, currentIndex, sortClock, delay);
         displayTime(timer, time);
-        finalizedBubbleSort(rectangles,currentIndex, sortClock, delay);
+        
         
 
 
